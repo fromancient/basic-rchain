@@ -7,8 +7,8 @@ use std::time::SystemTime;
 use blake2::{Blake2b, Digest};
 use std::string::String;
 use std::convert::From;
-
-
+use generic_array::GenericArray;
+use blake2::Blake2bVarCore;
 /// The actual Blockchain container
 #[derive(Debug, Clone)]
 pub struct Blockchain {
@@ -313,7 +313,7 @@ impl Block {
 
     /// Will calculate the hash of the whole block including transactions Blake2 hasher
     pub fn calculate_hash(&self) -> Vec<u8> {
-        let mut hasher = Blake2b::new();
+        let mut hasher: CoreWrapper<CtVariableCoreWrapper<Blake2bVarCore, GenericArray<u8, typenum::U32>>> = Blake2b::new();
 
         for transaction in self.transactions.iter() {
             hasher.update(transaction.calculate_hash())
@@ -435,7 +435,8 @@ impl Transaction {
 
     /// Will calculate the hash using Blake2 hasher
     pub fn calculate_hash(&self) -> Vec<u8> {
-        let mut hasher = Blake2b::new();
+        let mut hasher: CoreWrapper<CtVariableCoreWrapper<Blake2bVarCore, GenericArray<u8, typenum::U32>>> = Blake2b::new();
+
         let transaction_as_string = format!("{:?}", (&self.created_at, &self.record,
                                                      &self.from, &self.nonce));
 
