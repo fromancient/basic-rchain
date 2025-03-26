@@ -8,3 +8,5 @@ edition = "2018"
 
 [dependencies]
 blake2 = "*"
+generic-array = "0.14"  # or the latest version
+typenum = "1.15"  # or the latest version
